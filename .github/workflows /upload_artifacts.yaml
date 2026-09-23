@@ -11,8 +11,8 @@ on:
         description: 'Version'
         required: true
         type: string
-      UPDATE_TDLIB:
-        description: 'UPDATE_TDLIB'
+      UPDATE_REPO:
+        description: 'UPDATE_REPO'
         required: true
         type: string
         default: 'false'
@@ -30,12 +30,12 @@ jobs:
         run: |
           echo "commit_hash=${{ inputs.commit_hash }}" >> $GITHUB_ENV
           echo "version=${{ inputs.version }}" >> $GITHUB_ENV
-          echo "UPDATE_TDLIB=${{ inputs.UPDATE_TDLIB }}" >> $GITHUB_ENV
+          echo "UPDATE_REPO=${{ inputs.UPDATE_REPO }}" >> $GITHUB_ENV
           echo "RUN_IDS=${{ inputs.RUN_IDS }}" >> $GITHUB_ENV
-          printf "commit_message<<EOF\n%s\n%s\nEOF\n" "TDLib Prebuilt Binaries ${{ inputs.version }}" "${{ inputs.commit_hash }} Update version to ${{ inputs.version }}" >> $GITHUB_ENV
+          printf "commit_message<<EOF\n%s\n%s\nEOF\n" "IMSProg Prebuilt Binaries ${{ inputs.version }}" "${{ inputs.commit_hash }} Update version to ${{ inputs.version }}" >> $GITHUB_ENV
       
       - name: JSON to variables
-        if: env.UPDATE_TDLIB == 'true'
+        if: env.UPDATE_REPO == 'true'
         uses: rgarcia-phi/json-to-variables@v1.1.0
         with:
           filename: '.github/workflows/td-version.json'
@@ -174,7 +174,7 @@ jobs:
           ls -la artifacts/*.zip 2>/dev/null || echo "No ZIPs present."
 
       - name: Upload to Telegram
-        if: env.UPDATE_TDLIB == 'true'
+        if: env.UPDATE_REPO == 'true'
         env:
           API_ID: ${{ secrets.TELEGRAM_API_ID }}
           API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
