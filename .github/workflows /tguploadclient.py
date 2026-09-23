@@ -1,0 +1,93 @@
+import os
+import sys
+import asyncio
+from telethon import TelegramClient, utils
+from telethon.sessions import StringSession
+from telethon.tl.types import PeerChannel
+from telethon.tl import types
+
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+SESSION = os.environ.get("SESSION")
+CHAT_ID = os.getenv("CHAT_ID")
+MESSAGE_THREAD_ID = int(os.getenv("MESSAGE_THREAD_ID"))
+COMMIT_MESSAGE = os.environ.get("COMMIT_MESSAGE")
+
+def create_client():
+    return TelegramClient(StringSession(SESSION), API_ID, API_HASH)
+
+async def main():
+    global CHAT_ID
+    if not all([API_ID, API_HASH, SESSION, CHAT_ID]):
+        print("[-] Missing required env vars!")
+        sys.exit(1)
+    
+    print("[+] Starting Telethon upload")
+    print("[+] Files:", sys.argv[1:])
+
+    client = create_client()
+    
+    async with client:
+        CHAT_ID = CHAT_ID.replace("/c/", "/")
+        try:
+            real_id = int(CHAT_ID)
+            print(f"[+] {real_id} is a valid Number")
+            CHAT_ID = real_id
+        except ValueError:
+            print(f"[-] {CHAT_ID} is NOT a valid Number")
+            try:
+                entity = await client.get_entity(CHAT_ID)
+                real_id, peer_type = utils.resolve_id(entity.id)
+                print(f"[+] Real ID: {real_id}")
+                CHAT_ID = real_id
+            except Exception as e:
+                print(f"[-] Error: {e}")
+                sys.exit(1)
+        try:
+            real_id, peer_type = utils.resolve_id(CHAT_ID)        
+            entity = await client.get_entity(PeerChannel(real_id))
+            print("[+] Entity Found") 
+        except Exception as e:
+            print(f"[-] Failed to resolve chat entity: {e}")
+            sys.exit(1)
+
+        paths = sys.argv[1:]
+        
+        print(f"[+] Caption: {COMMIT_MESSAGE}")
+        
+        valid_files = []
+        for one in paths:
+            if not os.path.exists(one):
+                print(f"[-] File not exist: {one}")
+                continue
+            valid_files.append(one)
+            print(f"[+] Valid file: {one}")
+        
+        if not valid_files:
+            print("[-] No valid files to upload!")
+            return       
+        
+        if len(valid_files) == 1:
+            print(f"[+] Uploading {len(valid_files)} file(")
+            await client.send_file(
+                entity,
+                valid_files[0],
+                caption=COMMIT_MESSAGE,
+                reply_to=MESSAGE_THREAD_ID
+            )
+        else:
+            chunks = [valid_files[i:i + 10] for i in range(0, len(valid_files), 10)]
+            for chunk in chunks:
+                print(f"[+] Uploading {len(chunk)} files as album...")
+                await client.send_file(
+                    entity,
+                    chunk,
+                    caption=COMMIT_MESSAGE,
+                    reply_to=MESSAGE_THREAD_ID
+                )
+        
+        print("[+] Album(s) uploaded successfully!")
+        print("[+] Done!")
+
+if __name__ == "__main__":
+    asyncio.run(main())
