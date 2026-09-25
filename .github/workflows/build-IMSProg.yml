@@ -60,23 +60,25 @@ jobs:
       - name: Build IMSProg
         if: env.UPDATE_REPO == 'true'
         run: |
-          echo "$(ls ~/Applications)"
           echo "$(ls /Applications)"
           cd IMSProg
             ./build_all.sh
-            echo "$(ls ~/Applications)"
+            echo "$(ls /Applications)"
             echo "$(ls -l)"
           cd -
 
       - name: Create DMG Package
         run: |
-          mkdir artifacts && ARTIFACT_DIR="/Applications"
+          mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
-          echo "VOLNAME=IMSProg_$env.version" >> $GITHUB_ENV
+          echo "VOLNAME=IMSProg_$version" >> $GITHUB_ENV
           echo "DMG=$VOLNAME.dmg" >> $GITHUB_ENV
+          echo "DMG=$DMG"
 
           cd $ARTIFACT_DIR
-            ln -s /Applications $ARTIFACT_DIR/Applications
+            ln -s /Applications Applications
+            cp /Applications/IMSProg* .
+            chmod +x *.app
           cd -
             
           create-dmg \
