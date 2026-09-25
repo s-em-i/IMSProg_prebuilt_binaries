@@ -24,7 +24,7 @@ Github Secrets you need:
 * @GroupName (@TaPaccoSupport)
 * GroupName (TaPaccoSupport)
 
-You can get the **MESSAGE_THREAD_ID** by <img alt="grafik" src="https://github.com/user-attachments/assets/fb007aea-01f2-48ed-96da-88ba4e6836fd" style="height: 1.5em;">\
+You can get the **MESSAGE_THREAD_ID** by <img alt="grafik" src="https://github.com/user-attachments/assets/54ca9262-02bb-4249-a7f9-e52d081fd058" style="height: 1.5em;">\
 from your topic: `https://t.me/TaPaccoSupport/324/325` \
 -> **324** would be your **MESSAGE_THREAD_ID**.
 
