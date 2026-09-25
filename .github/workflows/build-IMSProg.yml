@@ -72,6 +72,8 @@ jobs:
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
           echo "VOLNAME=IMSProg_$version" >> $GITHUB_ENV
+          echo "VOLNAME=$VOLNAME"
+          echo "version=$version"
           echo "IMSProgDMG=$VOLNAME.dmg" >> $GITHUB_ENV
           echo "IMSProgDMG=$IMSProgDMG"
           echo "IMSProgZIP=$VOLNAME.zip" >> $GITHUB_ENV
@@ -79,7 +81,7 @@ jobs:
 
           cd $ARTIFACT_DIR
             ln -s /Applications Applications
-            cp /Applications/IMSProg* .
+            cp -R /Applications/IMSProg* .
             chmod +x *.app
           cd -
             
