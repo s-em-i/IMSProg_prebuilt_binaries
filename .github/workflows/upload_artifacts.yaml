@@ -25,7 +25,7 @@ jobs:
   upload_artifacts:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4    
+      - uses: actions/checkout@v7    
       - name: Parse Inputs in GITHUB_ENV
         run: |
           echo "commit_hash=${{ inputs.commit_hash }}" >> $GITHUB_ENV
@@ -36,7 +36,7 @@ jobs:
       
       - name: JSON to variables
         if: env.UPDATE_REPO == 'true'
-        uses: rgarcia-phi/json-to-variables@v1.1.0
+        uses: antifree/json-to-variables@v1.4.0
         with:
           filename: '.github/workflows/wf_pkg_vers.json'
           prefix: wf_pkg_vers
