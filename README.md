@@ -28,38 +28,11 @@ You can get the **MESSAGE_THREAD_ID** by <img alt="grafik" src="https://github.c
 from your topic: `https://t.me/TaPaccoSupport/324/325` \
 -> **324** would be your **MESSAGE_THREAD_ID**.
 
-### How to get your Telegram Session String
-Save your **API_ID** and **API_HASH** into the `tg_session_string.py` script,\
-run it, and it prints out a very long session string -> your **TELEGRAM_SESSION**
-
-```
-import telethon, sys
-from telethon import TelegramClient
-from telethon.sessions import StringSession
-
-async def main(client: telethon.TelegramClient):
-
-    if(not client.is_connected()):
-        await client.connect()
-    
-    session_string = client.session.save()
-    print(f"\nSESSION STRING (for GitHub Secrets):")
-    print(session_string)
-
-###### Script Entrypoint ######
-
-api_id = ""
-api_hash = ""
-
-client = TelegramClient(StringSession(), api_id, api_hash)
-
-with client:
-   client.loop.run_until_complete(main(client))
-```
+### How to get your [Telegram Session String](https://github.com/s-em-i/tg_session_string)
 	
-## Telegram Group TDlib Prebuilt Binaries
+## Telegram Group IMSProg Prebuilt Binaries
 [IMSProg GitHub Prebuilt Binaries](https://t.me/TaPaccoSupport/324)
 
 <a name="license"></a>
 ## License
-`IMSProg prebuilt Binaries` is licensed under the terms of the Boost Software License. See [LICENSE_1_0.txt](http://www.boost.org/LICENSE_1_0.txt) for more information.
+This Repo is licensed under the terms of the Boost Software License. See [LICENSE_1_0.txt](http://www.boost.org/LICENSE_1_0.txt) for more information.
