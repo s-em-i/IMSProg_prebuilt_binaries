@@ -43,19 +43,13 @@ jobs:
           filename: '.github/workflows/wf_pkg_vers.json'
           prefix: wf_pkg_vers
 
-      - name: Install QT
-        if: env.UPDATE_REPO == 'true'
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.wf_pkg_vers_QT }}
-
       - name: Install Build Essentials
         if: env.UPDATE_REPO == 'true'
         run: |
+          brew install qt@${{ env.wf_pkg_vers_QT }} libftdi create-dmg
           # already installed:libusb cmake pkgconf
-          brew install libftdi create-dmg
           HOST_ARCH=$(uname -m)
-          echo $(HOST_ARCH)      
+          echo HOST_ARCH=$HOST_ARCH     
 
       - name: Build IMSProg
         if: env.UPDATE_REPO == 'true'
@@ -63,20 +57,22 @@ jobs:
           echo "$(ls /Applications)"
           cd IMSProg
             ./build_all.sh
-            echo "$(ls /Applications)"
-            echo "$(ls -l)"
           cd -
 
       - name: Create DMG Package
         run: |
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
-          echo "VOLNAME=IMSProg_$version" >> $GITHUB_ENV
+          VOLNAME="IMSProg_$version"
+          IMSProgDMG="$VOLNAME.dmg"
+          IMSProgZIP="$VOLNAME.zip"
+          
+          echo "VOLNAME=$VOLNAME" >> $GITHUB_ENV
+          echo "IMSProgDMG=$IMSProgDMG" >> $GITHUB_ENV
+          echo "IMSProgZIP=$IMSProgZIP" >> $GITHUB_ENV
+          
           echo "VOLNAME=$VOLNAME"
-          echo "version=$version"
-          echo "IMSProgDMG=$VOLNAME.dmg" >> $GITHUB_ENV
-          echo "IMSProgDMG=$IMSProgDMG"
-          echo "IMSProgZIP=$VOLNAME.zip" >> $GITHUB_ENV
+          echo "IMSProgDMG=$IMSProgDMG"          
           echo "IMSProgZIP=$IMSProgZIP"
 
           cd $ARTIFACT_DIR
