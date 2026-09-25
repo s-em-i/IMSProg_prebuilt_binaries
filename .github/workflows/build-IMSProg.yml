@@ -5,7 +5,7 @@ permissions:
   actions: write
   contents: read
 jobs:
-  build-tdlib-macos-universal:
+  build-IMSProg-macos-universal:
     runs-on: macos-26-intel
     steps:
       - uses: actions/checkout@v7
@@ -37,11 +37,32 @@ jobs:
           cd -
           
       - name: JSON to Variables
-        if: env.UPDATE_TDLIB == 'true'
+        if: env.UPDATE_REPO == 'true'
         uses: antifree/json-to-variables@v1.4.0
         with:
           filename: '.github/workflows/wf_pkg_vers.json'
           prefix: wf_pkg_vers
+
+      - name: Install Build Essentials
+        if: env.UPDATE_REPO == 'true'
+        run: |
+          echo $(brew search libusb)
+          echo $(brew search cmake)
+          echo $(brew search pkgconf)
+          echo $(brew search libftdi)
+          brew install qt@${{ env.wf_pkg_vers_QT }} libusb cmake pkgconf libftdi
+          HOST_ARCH=$(uname -m)
+          mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
+          echo "~/Applications"
+
+      - name: Build IMSProg
+        if: env.UPDATE_REPO == 'true'
+        run: |
+          cd IMSProg
+            echo "$(ls -l)"
+            echo "$(pwd)"
+            ./build_all.sh
+          cd -
 
       - name: Create Zip Files
         if: env.UPDATE_REPO == 'true'
