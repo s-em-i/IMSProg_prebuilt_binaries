@@ -43,6 +43,12 @@ jobs:
           filename: '.github/workflows/wf_pkg_vers.json'
           prefix: wf_pkg_vers
 
+      - name: Install QT
+        if: env.UPDATE_REPO == 'true'
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ env.wf_pkg_vers_QT }}
+
       - name: Install Build Essentials
         if: env.UPDATE_REPO == 'true'
         run: |
@@ -50,28 +56,28 @@ jobs:
           echo $(brew search cmake)
           echo $(brew search pkgconf)
           echo $(brew search libftdi)
-          brew install qt@${{ env.wf_pkg_vers_QT }} libusb cmake pkgconf libftdi
+          # already installed:libusb cmake pkgconf
+          brew install libftdi
           HOST_ARCH=$(uname -m)
-          mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
-          echo "~/Applications"
+          echo $(HOST_ARCH)          
 
       - name: Build IMSProg
         if: env.UPDATE_REPO == 'true'
         run: |
           cd IMSProg
-            echo "$(ls -l)"
+            
             echo "$(pwd)"
             ./build_all.sh
+            echo "ls ~/Applications"
+            echo "$(ls -l)"
           cd -
 
       - name: Create Zip Files
         if: env.UPDATE_REPO == 'true'
         run: |
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
-          echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
-          
+          echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV          
           wget -O "$ARTIFACT_DIR/build3_01.zip" https://zlib.net/fossils/zlib-1.3.1.tar.gz
-     
 
       - name: Upload To Artifacts Dir
         if: env.UPDATE_REPO == 'true'
