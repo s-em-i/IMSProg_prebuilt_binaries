@@ -38,8 +38,8 @@ jobs:
         if: env.UPDATE_REPO == 'true'
         uses: rgarcia-phi/json-to-variables@v1.1.0
         with:
-          filename: '.github/workflows/td-version.json'
-          prefix: tdbuild_versions
+          filename: '.github/workflows/wf_pkg_vers.json'
+          prefix: wf_pkg_vers
           
       - name: Download Artifacts per Run-ID
         env:
@@ -184,7 +184,7 @@ jobs:
           COMMIT_MESSAGE: ${{ env.commit_message }}
         run: |
           if [ ! -z "${{ secrets.TELEGRAM_SESSION }}" ]; then
-            pip3 install Telethon==${{ env.tdbuild_versions_Telethon }}
+            pip3 install Telethon==${{ env.wf_pkg_vers_Telethon }}
             TGUPLOAD="${PWD}/.github/workflows/tguploadclient.py"            
             cd artifacts && TG_UPLOAD_FILES=$(ls *.zip)
             python3 $TGUPLOAD $TG_UPLOAD_FILES
