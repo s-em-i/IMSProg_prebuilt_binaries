@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: ArtifactsDir
-          path: ${{ env.ARTIFACT_DIR }}/*.dmg
+          path: ${{ env.ARTIFACT_DIR }}/*.zip
           retention-days: 1
 
       - name: Trigger last Workflow per CLI
