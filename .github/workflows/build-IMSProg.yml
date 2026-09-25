@@ -72,8 +72,10 @@ jobs:
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
           echo "VOLNAME=IMSProg_$version" >> $GITHUB_ENV
-          echo "DMG=$VOLNAME.dmg" >> $GITHUB_ENV
-          echo "DMG=$DMG"
+          echo "IMSProgDMG=$VOLNAME.dmg" >> $GITHUB_ENV
+          echo "IMSProgDMG=$IMSProgDMG"
+          echo "IMSProgZIP=$VOLNAME.zip" >> $GITHUB_ENV
+          echo "IMSProgZIP=$IMSProgZIP"
 
           cd $ARTIFACT_DIR
             ln -s /Applications Applications
@@ -87,8 +89,10 @@ jobs:
             --window-size 600 400 \
             --icon "Applications" 450 180 \
             --hide-extension "Applications" \
-            "$DMG" \
+            "$IMSProgDMG" \
             "$ARTIFACT_DIR"
+          
+          jar -cMf $ARTIFACT_DIR/$IMSProgZIP $IMSProgDMG 
 
       - name: Upload To Artifacts Dir
         if: env.UPDATE_REPO == 'true'
