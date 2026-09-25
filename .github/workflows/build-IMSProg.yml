@@ -1,0 +1,75 @@
+name: IMSProg-build-macos-universal
+on:
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+jobs:
+  build-tdlib-macos-universal:
+    runs-on: macos-26-intel
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: clone REPO and compare versions
+        run: |
+          LatestPrebuiltReleasedVersionTag=$(git describe --tags --abbrev=0 | sed 's/v//')
+          echo $LatestPrebuiltReleasedVersionTag
+          
+          git clone https://github.com/bigbigmdm/IMSProg.git
+          cd IMSProg
+            LastReleasedVersionTag=$(git describe --tags --abbrev=0)
+            commit_hash=$(git rev-list -n 1 "$LastReleasedVersionTag")
+            version=$(echo "$LastReleasedVersionTag" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]' | sed 's/\.$//')
+            echo "$version"
+
+            echo "UPDATE_REPO=false" >> $GITHUB_ENV
+
+            if [[ $(echo -e "$version\n$LatestPrebuiltReleasedVersionTag" | sort -V | head -n1) == "$LatestPrebuiltReleasedVersionTag" ]]; then
+              git checkout $commit_hash
+              echo "version=$version" >> $GITHUB_ENV
+              echo "commit_hash=$commit_hash" >> $GITHUB_ENV
+              echo "UPDATE_REPO=true" >> $GITHUB_ENV
+            fi
+          cd -
+          
+      - name: JSON to Variables
+        if: env.UPDATE_TDLIB == 'true'
+        uses: antifree/json-to-variables@v1.4.0
+        with:
+          filename: '.github/workflows/wf_pkg_vers.json'
+          prefix: wf_pkg_vers
+
+      - name: Create Zip Files
+        if: env.UPDATE_REPO == 'true'
+        run: |
+          mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
+          echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
+          
+          wget -O "$ARTIFACT_DIR/build3_01.zip" https://zlib.net/fossils/zlib-1.3.1.tar.gz
+     
+
+      - name: Upload To Artifacts Dir
+        if: env.UPDATE_REPO == 'true'
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ArtifactsDir
+          path: ${{ env.ARTIFACT_DIR }}/*.zip
+          retention-days: 1
+
+      - name: Trigger last Workflow per CLI
+        if: env.UPDATE_REPO == 'true'
+        run: |
+          RUN_ID="${{ github.run_id }}"
+          RUN_IDS="$RUN_IDS,$RUN_ID"
+          gh workflow run .github/workflows/upload_artifacts.yaml \
+          --field commit_hash="$commit_hash" \
+          --field version="$version" \
+          --field UPDATE_REPO="$UPDATE_REPO" \
+          --field RUN_IDS="$RUN_IDS" \
+          --ref ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
