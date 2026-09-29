@@ -37,6 +37,12 @@ jobs:
               echo "version=$version" >> $GITHUB_ENV
               echo "commit_hash=$commit_hash" >> $GITHUB_ENV
               echo "UPDATE_REPO=true" >> $GITHUB_ENV
+              
+              release_title=$(gh release view "$LastReleasedVersionTag" --json title --jq '.title')
+              echo "RELEASE_TITLE=$release_title" >> $GITHUB_ENV
+              
+              release_body=$(gh release view "$LastReleasedVersionTag" --json body --jq '.body' | awk '{printf "%s\\n", $0}')
+              echo "RELEASE_BODY=$release_body" >> $GITHUB_ENV
             fi
           cd -
 
