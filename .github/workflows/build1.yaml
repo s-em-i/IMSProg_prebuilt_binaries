@@ -45,6 +45,8 @@ jobs:
               echo "release_body=$release_body" >> $GITHUB_ENV
             fi
           cd -
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger next Workflow per CLI
         if: env.UPDATE_REPO == 'true'
