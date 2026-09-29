@@ -24,6 +24,8 @@ on:
 jobs:
   upload_artifacts:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7    
       - name: Parse Inputs in GITHUB_ENV
@@ -189,3 +191,15 @@ jobs:
             cd artifacts && TG_UPLOAD_FILES=$(ls *.zip)
             python3 $TGUPLOAD $TG_UPLOAD_FILES
           fi
+          
+      - name: Publish Release
+      if: env.UPDATE_REPO == 'true'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: "artifacts/*.zip"
+        file_glob: true
+        tag: ${{ inputs.version }}
+        release_name: "IMSProg Prebuilt Binaries ${{ inputs.version }}"
+        body: "${{ env.commit_message }}"
+        overwrite: true
