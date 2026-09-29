@@ -65,7 +65,9 @@ jobs:
           wait_for_run() {
             local RUN_ID=$1
             local MAX_WAIT=10800 # 3h
+            MAX_WAIT=900 # 15min
             local POLL_INTERVAL=600 # 10min
+            POLL_INTERVAL=60 # 1min
             local ELAPSED=0
             
             while [ $ELAPSED -lt $MAX_WAIT ]; do
