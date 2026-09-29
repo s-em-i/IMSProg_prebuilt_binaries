@@ -48,6 +48,8 @@ jobs:
           echo "version=${{ inputs.version }}" >> $GITHUB_ENV
           echo "UPDATE_REPO=${{ inputs.UPDATE_REPO }}" >> $GITHUB_ENV
           echo "RUN_IDS=${{ inputs.RUN_IDS }}" >> $GITHUB_ENV
+          echo "release_title=${{ inputs.release_title }}" >> $GITHUB_ENV
+          echo "release_body=${{ inputs.release_body }}" >> $GITHUB_ENV
 
       - name: Trigger next Workflow per CLI
         if: env.UPDATE_REPO == 'true'
