@@ -20,6 +20,14 @@ on:
         description: 'RUN_IDS'
         required: true
         type: string
+      release_title:
+        description: 'release_title'
+        required: true
+        type: string
+      release_body:
+        description: 'release_body'
+        required: true
+        type: string
 
 permissions:
   actions: write
@@ -51,6 +59,8 @@ jobs:
           --field version="$version" \
           --field UPDATE_REPO="$UPDATE_REPO" \
           --field RUN_IDS="$RUN_IDS" \
+          --field release_title="$release_title" \
+          --field release_body="$release_body" \
           --ref ${{ github.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
