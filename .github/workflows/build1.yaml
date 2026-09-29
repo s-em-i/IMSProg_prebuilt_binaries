@@ -39,10 +39,10 @@ jobs:
               echo "UPDATE_REPO=true" >> $GITHUB_ENV
               
               release_title=$(gh release view "$LastReleasedVersionTag" --json title --jq '.title')
-              echo "RELEASE_TITLE=$release_title" >> $GITHUB_ENV
+              echo "release_title=$release_title" >> $GITHUB_ENV
               
               release_body=$(gh release view "$LastReleasedVersionTag" --json body --jq '.body' | awk '{printf "%s\\n", $0}')
-              echo "RELEASE_BODY=$release_body" >> $GITHUB_ENV
+              echo "release_body=$release_body" >> $GITHUB_ENV
             fi
           cd -
 
@@ -55,6 +55,8 @@ jobs:
           --field version="$version" \
           --field UPDATE_REPO="$UPDATE_REPO" \
           --field RUN_IDS="$RUN_ID" \
+          --field release_title="$release_title" \
+          --field release_body="$release_body" \
           --ref ${{ github.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
