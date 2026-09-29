@@ -44,7 +44,7 @@ jobs:
           echo "RUN_IDS=${{ inputs.RUN_IDS }}" >> $GITHUB_ENV
           echo "release_title=${{ inputs.release_title }}" >> $GITHUB_ENV
           echo "release_body=${{ inputs.release_body }}" >> $GITHUB_ENV          
-          printf "commit_message<<EOF\n%s\n%s\nEOF\n" "IMSProg Prebuilt Binaries ${{ inputs.version }}" "${{ inputs.commit_hash }} Update version to ${{ inputs.version }}" >> $GITHUB_ENV
+          printf "commit_message<<EOF\n%s\n%s\n%s\n%s\nEOF\n" "${{ inputs.release_title }}" "${{ inputs.release_body }}" "IMSProg Prebuilt Binaries ${{ inputs.version }}" "${{ inputs.commit_hash }} Update version to ${{ inputs.version }}" >> $GITHUB_ENV
       
       - name: JSON to variables
         if: env.UPDATE_REPO == 'true'
