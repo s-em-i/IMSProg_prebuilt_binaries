@@ -98,14 +98,15 @@ jobs:
             "$IMSProgDMG" \
             "$ARTIFACT_DIR"
           
-          jar -cMf $ARTIFACT_DIR/$IMSProgZIP $IMSProgDMG 
+          jar -cMf $ARTIFACT_DIR/$IMSProgZIP $IMSProgDMG
+          cp $IMSProgDMG $ARTIFACT_DIR/
 
       - name: Upload To Artifacts Dir
         if: env.UPDATE_REPO == 'true'
         uses: actions/upload-artifact@v7.0.1
         with:
           name: ArtifactsDir
-          path: ${{ env.ARTIFACT_DIR }}/*.zip
+          path: ${{ env.ARTIFACT_DIR }}/*.dmg
           retention-days: 1
 
       - name: Trigger last Workflow per CLI
