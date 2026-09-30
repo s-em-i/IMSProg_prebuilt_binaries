@@ -44,9 +44,8 @@ jobs:
           echo "RUN_IDS=${{ inputs.RUN_IDS }}" >> $GITHUB_ENV
           echo "release_title=${{ inputs.release_title }}" >> $GITHUB_ENV
           echo "release_body=${{ inputs.release_body }}" >> $GITHUB_ENV          
-          #printf "commit_message<<EOF\n%s\n%s\n%s\n%s\nEOF\n" "${{ inputs.release_title }}" "${{ inputs.release_body }}" "IMSProg Prebuilt Binaries ${{ inputs.version }}" "${{ inputs.commit_hash }} Update version to ${{ inputs.version }}" >> $GITHUB_ENV
           CLEAN_BODY=$(printf "%b" "${{ inputs.release_body }}")
-          FULL_MESSAGE="${{ inputs.release_title }}"$'\n\n'"$CLEAN_BODY"$'\n\n'"IMSProg Prebuilt Binaries ${{ inputs.version }}"$'\n'"${{ inputs.commit_hash }} Update version to ${{ inputs.version }}"
+          FULL_MESSAGE="${{ inputs.release_title }}"$'\n\n'"$CLEAN_BODY"$'\n\n'"IMSProg Prebuilt Binaries v${{ inputs.version }}"$'\n'"${{ inputs.commit_hash }} Update version to v${{ inputs.version }}"
           printf "commit_message<<EOF\n%s\nEOF\n" "$FULL_MESSAGE" >> $GITHUB_ENV
           
       - name: JSON to variables
@@ -214,7 +213,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: "artifacts/*.dmg"
           file_glob: true
-          tag: ${{ inputs.version }}
-          release_name: "IMSProg Prebuilt Binaries ${{ inputs.version }}"
+          tag: "v${{ inputs.version }}"
+          release_name: "IMSProg Prebuilt Binaries v${{ inputs.version }}"
           body: "${{ env.commit_message }}"
           overwrite: true
