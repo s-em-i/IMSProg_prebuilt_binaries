@@ -57,7 +57,8 @@ jobs:
           brew install qt@${{ env.wf_pkg_vers_QT }} libftdi create-dmg
           # already installed:libusb cmake pkgconf
           HOST_ARCH=$(uname -m)
-          echo HOST_ARCH=$HOST_ARCH     
+          echo "HOST_ARCH=$HOST_ARCH" >> $GITHUB_ENV
+          echo HOST_ARCH=$HOST_ARCH
 
       - name: Build IMSProg
         if: env.UPDATE_REPO == 'true'
@@ -71,7 +72,7 @@ jobs:
         run: |
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
-          VOLNAME="IMSProg_$HOST_ARCH_v$version"
+          VOLNAME="IMSProg_${{ env.HOST_ARCH }}_v$version"
           IMSProgDMG="$VOLNAME.dmg"
           IMSProgZIP="$VOLNAME.zip"
           
