@@ -203,7 +203,7 @@ jobs:
           if [ ! -z "${{ secrets.TELEGRAM_SESSION }}" ]; then
             pip3 install Telethon==${{ env.wf_pkg_vers_Telethon }}
             TGUPLOAD="${PWD}/.github/workflows/tguploadclient.py"            
-            cd artifacts && TG_UPLOAD_FILES=$(ls *.zip)
+            cd artifacts && TG_UPLOAD_FILES=$(ls *.dmg)
             python3 $TGUPLOAD $TG_UPLOAD_FILES
           fi
           
