@@ -71,7 +71,7 @@ jobs:
         run: |
           mkdir artifacts && ARTIFACT_DIR="${PWD}/artifacts"
           echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
-          VOLNAME="IMSProg_$version"
+          VOLNAME="IMSProg_$HOST_ARCH_v$version"
           IMSProgDMG="$VOLNAME.dmg"
           IMSProgZIP="$VOLNAME.zip"
           
